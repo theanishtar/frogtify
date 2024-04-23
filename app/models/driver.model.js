@@ -14,6 +14,12 @@ const driverSchema = new mongoose.Schema({
   upload: {
     type: Date
   },
+  filename: {
+    type: String
+  },
+  path: {
+    type: String
+  },
   author: {
     type: Object,
     properties: {
