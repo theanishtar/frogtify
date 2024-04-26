@@ -14,7 +14,9 @@ const upload = multer({ dest: 'audio/' }); // 'uploads/' là thư mục để l�
 
 
 exports.upload = async (req, res) => {
-  try {
+  try {// Thư mục chứa file audio
+    const audioDirectory = path.join(__dirname, '..', '..', 'audio'); // Điều chỉnh đường dẫn để truy cập vào thư mục audio ở ngoài controller
+
     // Sử dụng middleware upload.single() để xử lý tệp tải lên từ yêu cầu
     upload.single('file')(req, res, async (err) => {
       if (err) {
@@ -22,11 +24,7 @@ exports.upload = async (req, res) => {
         return res.status(400).json({ message: err.message });
       }
 
-      // Sau khi tệp đã được tải lên thành công, bạn có thể truy cập thông tin của tệp thông qua req.file
-      console.log(req.file);
-      // Đọc dữ liệu của file từ đường dẫn
-      const filePath = req.file.path;
-      const fileData = fs.readFileSync(filePath);
+      const fileData = fs.readFileSync(audioDirectory);
 
       // Mã hóa dữ liệu của file thành base64
       const base64Data = fileData.toString('base64');
@@ -58,16 +56,19 @@ exports.upload = async (req, res) => {
 
 exports.get = async (req, res) => {
   try {
+    // Thư mục chứa file audio
+    const audioDirectory = path.join(__dirname, '..', '..', 'audio');
     let result = await Driver.find({});
     // Giải mã chuỗi base64
     const mp3Data = Buffer.from(result[0].dat, 'base64');
 
     // Lưu dữ liệu vào file MP3
-    const outputFilePath = path.join(__dirname, `${result[0]._id}.mp3`);
+    const outputFilePath = path.join(audioDirectory, `${result[0]._id}.mp3`);
     fs.writeFileSync(outputFilePath, mp3Data);
 
-    // Trả về đường dẫn của file MP3 đầu ra
-    res.json({ filePath: outputFilePath });
+    // Trả về danh sách thẻ a chứa đường dẫn
+    const htmlResponse = `<a href="${outputFilePath}">${result[0]._id}}</a>`;
+    res.send(htmlResponse);
   } catch (error) {
     res.status(500).json({
       message: error?.message || error,
