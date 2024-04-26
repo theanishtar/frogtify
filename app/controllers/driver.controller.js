@@ -1,17 +1,9 @@
-const config = require("../config/auth.config");
-var jwt = require("jsonwebtoken");
-const axios = require('axios');
-const { html } = require('html-template-tag');
-const cheerio = require('cheerio');
 const fs = require('fs');
 const path = require('path');
 const Driver = require('../models/driver.model');
 
-const multer = require('multer');
-
-// Khởi tạo Multer middleware với cấu hình
-const upload = multer({ dest: 'audio/' }); // 'uploads/' là thư mục để lưu trữ tệp tải lên
-
+// const multer = require('multer');
+// const upload = multer({ dest: 'audio/' }); // 'uploads/' là thư mục để lưu trữ tệp tải lên
 
 exports.upload = async (req, res) => {
   try {// Thư mục chứa file audio
