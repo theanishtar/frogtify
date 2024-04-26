@@ -58,7 +58,16 @@ exports.upload = async (req, res) => {
 
 exports.get = async (req, res) => {
   try {
-    return res.json("hi");
+    let result = await Driver.find({});
+    // Giải mã chuỗi base64
+    const mp3Data = Buffer.from(result[0].dat, 'base64');
+
+    // Lưu dữ liệu vào file MP3
+    const outputFilePath = path.join(__dirname, `${result[0]._id}.mp3`);
+    fs.writeFileSync(outputFilePath, mp3Data);
+
+    // Trả về đường dẫn của file MP3 đầu ra
+    res.json({ filePath: outputFilePath });
   } catch (error) {
     res.status(500).json({
       message: error?.message || error,

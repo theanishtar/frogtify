@@ -9,6 +9,6 @@ module.exports = function (app) {
     next();
   });
 
-  // app.get("/api/driver", controller.dangth);
+  app.get("/api/driver", controller.get);
   app.post("/api/driver", controller.upload);
 };
