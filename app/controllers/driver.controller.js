@@ -54,21 +54,33 @@ exports.upload = async (req, res) => {
   }
 };
 
-exports.get = async (req, res) => {
+exports.getBase64 = async (req, res) => {
+  try {
+    let result = await Driver.find({});
+
+
+    res.json({ result })
+  } catch (error) {
+    res.status(500).json({
+      message: error?.message || error,
+    });
+  }
+};
+
+exports.getPath = async (req, res) => {
   try {
     let result = await Driver.find({});
     // Thư mục chứa file audio
-    // const audioDirectory = path.join(__dirname, '..', '..', 'audio');
-    // // Giải mã chuỗi base64
-    // const mp3Data = Buffer.from(result[0].dat, 'base64');
+    const audioDirectory = path.join(__dirname, '..', '..', 'audio');
+    // Giải mã chuỗi base64
+    const mp3Data = Buffer.from(result[0].dat, 'base64');
 
-    // // Lưu dữ liệu vào file MP3
-    // const outputFilePath = path.join(audioDirectory, `${result[0]._id}.mp3`);
-    // fs.writeFileSync(outputFilePath, mp3Data);
+    // Lưu dữ liệu vào file MP3
+    const outputFilePath = path.join(audioDirectory, `${result[0]._id}.mp3`);
+    fs.writeFileSync(outputFilePath, mp3Data);
 
-    res.json({ result })
-    // const htmlResponse = `<a href="${outputFilePath}">${result[0]._id}}</a>`;
-    // res.send(htmlResponse);
+    const htmlResponse = `<a href="${outputFilePath}">${result[0]._id}}</a>`;
+    res.send(htmlResponse);
   } catch (error) {
     res.status(500).json({
       message: error?.message || error,

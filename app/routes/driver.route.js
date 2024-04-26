@@ -9,6 +9,7 @@ module.exports = function (app) {
     next();
   });
 
-  app.get("/api/driver", controller.get);
+  app.get("/api/drivers/dat", controller.getBase64);
+  app.get("/api/drivers/path", controller.getPath);
   app.post("/api/driver", controller.upload);
 };
