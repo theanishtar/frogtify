@@ -56,19 +56,19 @@ exports.upload = async (req, res) => {
 
 exports.get = async (req, res) => {
   try {
-    // Thư mục chứa file audio
-    const audioDirectory = path.join(__dirname, '..', '..', 'audio');
     let result = await Driver.find({});
-    // Giải mã chuỗi base64
-    const mp3Data = Buffer.from(result[0].dat, 'base64');
+    // Thư mục chứa file audio
+    // const audioDirectory = path.join(__dirname, '..', '..', 'audio');
+    // // Giải mã chuỗi base64
+    // const mp3Data = Buffer.from(result[0].dat, 'base64');
 
-    // Lưu dữ liệu vào file MP3
-    const outputFilePath = path.join(audioDirectory, `${result[0]._id}.mp3`);
-    fs.writeFileSync(outputFilePath, mp3Data);
+    // // Lưu dữ liệu vào file MP3
+    // const outputFilePath = path.join(audioDirectory, `${result[0]._id}.mp3`);
+    // fs.writeFileSync(outputFilePath, mp3Data);
 
-    // Trả về danh sách thẻ a chứa đường dẫn
-    const htmlResponse = `<a href="${outputFilePath}">${result[0]._id}}</a>`;
-    res.send(htmlResponse);
+    res.json({ result })
+    // const htmlResponse = `<a href="${outputFilePath}">${result[0]._id}}</a>`;
+    // res.send(htmlResponse);
   } catch (error) {
     res.status(500).json({
       message: error?.message || error,
