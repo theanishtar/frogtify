@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frogtify_app/data/model/song.dart';
 import 'package:frogtify_app/ui/discovery/discovery.dart';
 import 'package:frogtify_app/ui/home/viewmodel.dart';
+import 'package:frogtify_app/ui/now_playing/playing.dart';
 import 'package:frogtify_app/ui/person/user.dart';
 import 'package:frogtify_app/ui/setting/settings.dart';
 
@@ -18,6 +19,7 @@ class MusicApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: MusicHomePage(),
+      debugShowCheckedModeBanner: false, // xóa babel Debug Mode
     );
   }
 }
@@ -145,6 +147,45 @@ class _HomeTagPageState extends State<HomeTagPage> {
       });
     });
   }
+
+  void showBottomSheet(){
+    showModalBottomSheet(context: context, builder: (context){
+      return ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+        child: Container(
+          height: 400,
+          width: 500,
+          color: Colors.blueGrey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Padding(
+                padding: EdgeInsets.only(bottom: 16), // Thay đổi giá trị bottom tùy ý
+                child: Text('Modal Bottom Sheet'),
+              ),
+              ElevatedButton(
+                  onPressed: () =>Navigator.pop(context),
+                  child: const Text('Close Bottom Sheet'),
+              )
+            ]
+          )
+        )
+      );
+    });
+
+  }
+
+  void navigate(Song song){
+    Navigator.push(context,
+      CupertinoPageRoute(builder: (context){
+        return NowPlaying(
+          songs: songs,
+          playingSong: song,
+        );
+      })
+    );
+  }
 }
 
 class _SongItemSection extends StatelessWidget {
@@ -159,25 +200,37 @@ class _SongItemSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: FadeInImage.assetNetwork(
-        placeholder: 'assets/image.png',
-        image: song.image,
-        width: 48,
-        height: 48,
-        imageErrorBuilder: (contect, error, stackTrace) {
-          return Image.asset(
-            'assets/image.png',
-            width: 48,
-            height: 48,
-          );
-        },
+      contentPadding: const EdgeInsets.only(
+        left: 24,
+        right: 8,
+      ),
+      leading: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: FadeInImage.assetNetwork(
+          placeholder: 'assets/image.png',
+          image: song.image,
+          width: 48,
+          height: 48,
+          imageErrorBuilder: (contect, error, stackTrace) {
+            return Image.asset(
+              'assets/image.png',
+              width: 48,
+              height: 48,
+            );
+          },
+        ),
       ),
       title: Text(song.title),
       subtitle: Text(song.artist),
       trailing: IconButton(
         icon: const Icon(Icons.more_horiz),
-        onPressed: () {},
+        onPressed: () {
+          parent.showBottomSheet();
+        },
       ),
+      onTap: (){
+        parent.navigate(song);
+      },
     );
   }
 }
