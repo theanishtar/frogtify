@@ -2,4 +2,4 @@
 
 ### Day 1
 
-![]('./streaks/day1.gif')
+![](https://github.com/theanishtar/frogtify/blob/main/streaks/day1.gif?raw=true)
